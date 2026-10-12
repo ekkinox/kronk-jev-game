@@ -1,23 +1,13 @@
 # Kronk Jev Game
 
-**Race a local AI model in your terminal.**
-
-An endless runner, like the Chrome dinosaur game. You play the top half of the
-screen. A small AI model plays the same map in the bottom half, at the same
-time, running on your own machine.
-
-Can a 0.8B model react well enough, and fast enough, to play in real time?
-With Jev, each answer takes about 80 ms, fast enough to time its jumps.
+An endless runner in the terminal. You play the top half, a local AI model
+plays the same map in the bottom half, at the same time.
 
 ![You on top, the model below, both running the same map](docs/screenshot.png)
 
-It is built with [Kronk](https://github.com/ardanlabs/kronk), which runs models
-locally through llama.cpp, and plays against
-[Jev-Style-0.8B-Decision-v3](https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decision-v3-GGUF),
-a small *decision model*.
-
 ## Contents
 
+- [Goal](#goal)
 - [Quick start](#quick-start)
 - [Controls](#controls)
 - [Options](#options)
@@ -26,6 +16,21 @@ a small *decision model*.
 - [Results](#results)
 - [Project layout](#project-layout)
 - [Credits](#credits)
+
+## Goal
+
+We built this to see how well local *decision models* perform when run with
+[Kronk](https://github.com/ardanlabs/kronk), a Go runtime for local models on
+top of llama.cpp.
+
+A decision model doesn't generate text. It picks one option from a list, in a
+single forward pass, so it can answer much faster than a chat model. A game
+is a good test: the model must be right, and it must be right in time.
+
+The default model is
+[Jev-Style-0.8B-Decision-v3](https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decision-v3-GGUF).
+With it, each answer takes about 80 ms on an integrated GPU, fast enough to
+time its jumps. See [Results](#results) for the numbers.
 
 ## Quick start
 
