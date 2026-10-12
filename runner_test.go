@@ -33,6 +33,7 @@ func span(lo, hi int) []int {
 // a hole or a rock 1 high (steps 0 to 7): d from 1 to 9-w. They must be at 2
 // over a rock 2 high (steps 1 to 6): d from 2 to 8-w.
 func TestJumpWindows(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		o    Obstacle
 		want []int
@@ -59,6 +60,7 @@ func TestJumpWindows(t *testing.T) {
 // starts, that a crouch clears it from d=1 to 6 (the 8 crouched steps cover
 // its 3 cells), and that standing never does.
 func TestBirdNeedsCrouch(t *testing.T) {
+	t.Parallel()
 	bird := Obstacle{Kind: Bird, Width: BirdWidth}
 	for d := 0; d <= 20; d++ {
 		for wait := 0; wait <= 20; wait++ {
@@ -77,6 +79,7 @@ func TestBirdNeedsCrouch(t *testing.T) {
 
 // TestRight checks the right actions -table compares the model with.
 func TestRight(t *testing.T) {
+	t.Parallel()
 	hole := Obstacle{Kind: Hole, Width: 2}
 	rock := Obstacle{Kind: Rock, Width: 2, Height: 2}
 	bird := Obstacle{Kind: Bird, Width: BirdWidth}
@@ -109,6 +112,7 @@ func TestRight(t *testing.T) {
 // TestJumpArc checks the arc, that inputs in the air are dropped, and that a
 // jump can't start on the landing step.
 func TestJumpArc(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld()
 	var l Lane
 	l.Press(Jump)
@@ -140,6 +144,7 @@ func TestJumpArc(t *testing.T) {
 // that always jumps: the runner must touch the ground for one step between
 // two jumps, so it can't stay in the air over a hole.
 func TestHeldJump(t *testing.T) {
+	t.Parallel()
 	var want []int
 	for range 3 {
 		want = append(append(want, JumpArc[:]...), 0)
@@ -172,6 +177,7 @@ func TestHeldJump(t *testing.T) {
 // press, then a repeat after the repeat delay, then one every 40 ms. The
 // runner must stay crouched until the key is released, at every speed.
 func TestHeldCrouchKey(t *testing.T) {
+	t.Parallel()
 	const held = 2 * time.Second
 	for _, delay := range []time.Duration{250 * time.Millisecond, 500 * time.Millisecond, 600 * time.Millisecond, 660 * time.Millisecond} {
 		for speed := MinSpeed; speed <= MaxSpeed; speed += SpeedStep {
@@ -199,6 +205,7 @@ func TestHeldCrouchKey(t *testing.T) {
 // TestCrouch checks that a crouch lasts CrouchSteps, that another crouch
 // restarts it, and that a jump stands the runner up.
 func TestCrouch(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld()
 	var l Lane
 	l.Press(Crouch)
@@ -234,6 +241,7 @@ func TestCrouch(t *testing.T) {
 // TestFailure checks that hitting an obstacle gives -1 once, flashes, and lets
 // the runner pass through the rest of it.
 func TestFailure(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld(Obstacle{Kind: Rock, Start: 5, Width: 2, Height: 2})
 	var l Lane
 	var outs []Outcome
@@ -259,6 +267,7 @@ func TestFailure(t *testing.T) {
 // TestHoleFall checks that a runner in a hole can't act until there is
 // ground under it again.
 func TestHoleFall(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld(Obstacle{Kind: Hole, Start: 5, Width: 4})
 	var l Lane
 	for l.X < 5 {
@@ -293,6 +302,7 @@ func TestHoleFall(t *testing.T) {
 // obstacle must resolve exactly once per lane, in order, and the score must be
 // passed minus failed.
 func TestScoresOnce(t *testing.T) {
+	t.Parallel()
 	w := NewWorld(7)
 	rng := rand.New(rand.NewPCG(1, 2))
 	lanes := []*Lane{{}, {}}

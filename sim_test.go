@@ -10,6 +10,7 @@ import (
 // TestSimStopsOnError checks that -sim stops as soon as a model call fails,
 // instead of playing on without the model until the time is up.
 func TestSimStopsOnError(t *testing.T) {
+	t.Parallel()
 	calls := 0
 	b := &Brain{ask: func(ctx context.Context, s State) (Decision, error) {
 		if calls++; calls == 2 {

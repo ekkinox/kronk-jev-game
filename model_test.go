@@ -9,6 +9,7 @@ import (
 )
 
 func TestDefaultModel(t *testing.T) {
+	t.Parallel()
 	if !strings.HasPrefix(defaultModel, "https://huggingface.co/") || !strings.HasSuffix(defaultModel, ".gguf") {
 		t.Errorf("default model %q is not a GGUF file on Hugging Face", defaultModel)
 	}

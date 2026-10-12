@@ -6,6 +6,7 @@ import (
 )
 
 func TestKeyCrouchSteps(t *testing.T) {
+	t.Parallel()
 	for _, tc := range []struct{ speed, want int }{
 		{MinSpeed, CrouchSteps}, // 700 ms is 3.5 steps: the model's crouch is longer
 		{DefaultSpeed, 14},      // exactly 700 ms
@@ -25,6 +26,7 @@ func TestKeyCrouchSteps(t *testing.T) {
 }
 
 func TestDifficulty(t *testing.T) {
+	t.Parallel()
 	for d := range numDifficulties {
 		got, ok := parseDifficulty(d.String())
 		if !ok || got != d {
@@ -43,6 +45,7 @@ func TestDifficulty(t *testing.T) {
 }
 
 func TestObstacleMix(t *testing.T) {
+	t.Parallel()
 	if sum := HolePercent + RockPercent + BirdPercent; sum != 100 {
 		t.Errorf("the obstacle mix sums to %d%%, want 100%%", sum)
 	}
@@ -52,6 +55,7 @@ func TestObstacleMix(t *testing.T) {
 // smallest gap leaves room to clear the biggest obstacle, land, and clear the
 // next one. The runner acts as early as its action clears the obstacle.
 func TestSmallestGap(t *testing.T) {
+	t.Parallel()
 	biggest := []Obstacle{
 		{Kind: Hole, Width: HoleMaxWidth},
 		{Kind: Rock, Width: RockMaxWidth, Height: RockMaxHeight},

@@ -9,6 +9,7 @@ import (
 // TestQuestion guards the question: one option per action, in Action order,
 // each with a description (kronk rejects duplicate names).
 func TestQuestion(t *testing.T) {
+	t.Parallel()
 	if len(actionQuestion.Options) != int(numActions) {
 		t.Fatalf("%d options, want %d", len(actionQuestion.Options), numActions)
 	}
@@ -30,6 +31,7 @@ func TestQuestion(t *testing.T) {
 // TestPick checks the thresholds against make table answers: a sure jump or
 // crouch is kept, an unsure one far from the obstacle becomes run.
 func TestPick(t *testing.T) {
+	t.Parallel()
 	for _, c := range []struct {
 		choice string
 		probs  map[string]float64
@@ -53,6 +55,7 @@ func TestPick(t *testing.T) {
 }
 
 func TestStateAt(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld(
 		Obstacle{Kind: Rock, Start: 10, Width: 2, Height: 1},
 		Obstacle{Kind: Bird, Start: 29, Width: BirdWidth},
@@ -114,6 +117,7 @@ func fakeBrain(asked chan<- State, reply <-chan Decision) *Brain {
 // TestObserveProjects checks that the state is projected by speed x the
 // moving average of the latency, seeded by the first call.
 func TestObserveProjects(t *testing.T) {
+	t.Parallel()
 	asked, reply := make(chan State, 1), make(chan Decision, 1)
 	b := fakeBrain(asked, reply)
 	w := FixedWorld(Obstacle{Kind: Rock, Start: 30, Width: 1, Height: 1})
@@ -154,6 +158,7 @@ func TestObserveProjects(t *testing.T) {
 // test steps the lane only while the model is inside a call or waiting, so
 // what it reads next is known.
 func TestPlayWaitsOnGround(t *testing.T) {
+	t.Parallel()
 	asked, reply := make(chan State), make(chan Decision)
 	b := fakeBrain(asked, reply)
 	answers := make(chan Decision)
@@ -228,6 +233,7 @@ func TestPlayWaitsOnGround(t *testing.T) {
 // TestDeliverDropsStale checks that an answer about an obstacle the lane has
 // resolved since the call started is dropped and counted.
 func TestDeliverDropsStale(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld(
 		Obstacle{Kind: Rock, Start: 5, Width: 1, Height: 1},
 		Obstacle{Kind: Bird, Start: 30, Width: BirdWidth},

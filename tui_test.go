@@ -64,6 +64,7 @@ func TestViewFits(t *testing.T) {
 
 // TestViewContent checks what a full frame shows.
 func TestViewContent(t *testing.T) {
+	t.Parallel()
 	g := testGame(80, 30)
 	g.Update(space)
 	for range 200 {
@@ -92,6 +93,7 @@ func TestViewContent(t *testing.T) {
 // TestModelHeader checks that the model's header keeps its width from one
 // answer to the next, so it does not jitter.
 func TestModelHeader(t *testing.T) {
+	t.Parallel()
 	g := testGame(120, 30)
 	width := func() int {
 		h := ansi.Strip(g.botHeader())
@@ -117,6 +119,7 @@ func TestModelHeader(t *testing.T) {
 // TestDifficultyKey checks that d cycles easy, medium, hard and back, and
 // that the score line and the ground show it.
 func TestDifficultyKey(t *testing.T) {
+	t.Parallel()
 	g := testGame(121, 67)
 	d := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}}
 	for _, want := range []Difficulty{Easy, Medium, Hard, Easy} {
@@ -135,6 +138,7 @@ func TestDifficultyKey(t *testing.T) {
 }
 
 func TestStartAndPause(t *testing.T) {
+	t.Parallel()
 	g := testGame(80, 30)
 	tick := func() { g.Update(tickMsg{}) }
 	tick()
@@ -185,6 +189,7 @@ func TestStartAndPause(t *testing.T) {
 // TestCrouchKey checks that the crouch key crouches for KeyCrouchSteps, the
 // model's answer for CrouchSteps.
 func TestCrouchKey(t *testing.T) {
+	t.Parallel()
 	g := testGame(80, 30)
 	g.Update(space)
 	g.Update(tea.KeyMsg{Type: tea.KeyDown})
@@ -207,6 +212,7 @@ func TestCrouchKey(t *testing.T) {
 // TestProgram runs the game as a bubbletea program without a terminal: after
 // space, it must step on its own, and quit on q.
 func TestProgram(t *testing.T) {
+	t.Parallel()
 	g := testGame(80, 30)
 	p := tea.NewProgram(g, tea.WithInput(nil), tea.WithOutput(io.Discard), tea.WithoutSignalHandler())
 	go func() {

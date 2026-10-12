@@ -9,6 +9,7 @@ import (
 // TestWorldSeed checks that a seed always gives the same map, however far it
 // is generated at a time, and that two seeds give two maps.
 func TestWorldSeed(t *testing.T) {
+	t.Parallel()
 	a, b, c := NewWorld(42), NewWorld(42), NewWorld(43)
 	b.Span(0, 5000) // generate b ahead, a one at a time
 	same := true
@@ -29,8 +30,12 @@ func TestWorldSeed(t *testing.T) {
 // TestWorldLayout checks the start, the gaps, the sizes and the mix, on each
 // difficulty.
 func TestWorldLayout(t *testing.T) {
+	t.Parallel()
 	for d := range numDifficulties {
-		t.Run(d.String(), func(t *testing.T) { testLayout(t, d) })
+		t.Run(d.String(), func(t *testing.T) {
+			t.Parallel()
+			testLayout(t, d)
+		})
 	}
 }
 
@@ -76,6 +81,7 @@ func testLayout(t *testing.T, d Difficulty) {
 // TestDifficultyChange checks that a harder difficulty brings obstacles closer
 // together, from the next obstacle generated: the ones already there stay.
 func TestDifficultyChange(t *testing.T) {
+	t.Parallel()
 	w := NewWorld(1)
 	before := w.Span(0, 200)
 	w.Difficulty = Hard
@@ -100,6 +106,7 @@ func TestDifficultyChange(t *testing.T) {
 }
 
 func TestSpanAndHoles(t *testing.T) {
+	t.Parallel()
 	w := FixedWorld(
 		Obstacle{Kind: Rock, Start: 10, Width: 2, Height: 1},
 		Obstacle{Kind: Hole, Start: 30, Width: 3},
