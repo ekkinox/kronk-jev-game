@@ -23,7 +23,7 @@ Can decision models be fast enough to play games ?
 
 ## Goal
 
-Experiment to see how well local *decision models* perform when run with
+I built this to see how well local *decision models* perform when run with
 [Kronk](https://github.com/ardanlabs/kronk), a Go runtime for local models on
 top of llama.cpp.
 
