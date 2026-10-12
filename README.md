@@ -7,7 +7,7 @@ plays the same map in the bottom half, at the same time.
 
 Can decision models be fast enough to play games ?
 
-![You on top, the model below, both running the same map](docs/screenshot.png)
+![You on top, the model below, both running the same map](docs/game.png)
 
 ## Contents
 
