@@ -1,7 +1,11 @@
 # Kronk Jev Game
 
-An endless runner in the terminal. You play the top half, a local AI model
+An endless runner in the terminal.
+
+You play the top half, a local AI decision model
 plays the same map in the bottom half, at the same time.
+
+Can decision models be fast enough to play games ?
 
 ![You on top, the model below, both running the same map](docs/screenshot.png)
 
