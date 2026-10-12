@@ -21,12 +21,16 @@ SIM       ?= 60s
 
 # Which llama.cpp build to download and run: cuda | vulkan | metal | cpu. When
 # unset: metal on an Apple Silicon Mac (an Intel Mac only has cpu), cuda if
-# nvidia-smi is found, vulkan on an AMD GPU or if vulkaninfo is found, else cpu.
+# nvidia-smi is found, vulkan on an AMD GPU, if a Vulkan GPU driver is installed
+# or if vulkaninfo is found, else cpu. lvp_icd is Mesa's Vulkan on the CPU,
+# slower than the cpu build, so it doesn't count as a driver.
 PROCESSOR ?= $(shell \
 	if [ "$$(uname -s)" = Darwin ]; then \
 		if [ "$$(uname -m)" = arm64 ]; then echo metal; else echo cpu; fi; \
 	elif command -v nvidia-smi >/dev/null 2>&1; then echo cuda; \
 	elif command -v rocminfo >/dev/null 2>&1 || [ -e /dev/kfd ]; then echo vulkan; \
+	elif ls /usr/share/vulkan/icd.d/*.json /usr/local/share/vulkan/icd.d/*.json /etc/vulkan/icd.d/*.json 2>/dev/null \
+		| grep -qv lvp_icd; then echo vulkan; \
 	elif command -v vulkaninfo >/dev/null 2>&1; then echo vulkan; \
 	else echo cpu; fi)
 
