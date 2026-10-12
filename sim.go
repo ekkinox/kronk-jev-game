@@ -154,26 +154,18 @@ func runTable(b *Brain) error {
 			}
 
 			want := Right(o, d)
-			names := make([]string, len(want))
-			for i, a := range want {
-				names[i] = a.String()
-			}
-			mark := paint("too late", dim)
-			switch {
-			case len(want) == 0:
+			names, mark := "-", paint("too late", dim)
+			if len(want) == 0 {
 				late++
-			case slices.Contains(want, dec.Action):
-				mark = paint("✓", green)
-				caseRight++
+			} else {
+				names, mark = joinActions(want), paint("✗", red)
 				caseCounted++
-			default:
-				mark = paint("✗", red)
-				caseCounted++
+				if slices.Contains(want, dec.Action) {
+					mark = paint("✓", green)
+					caseRight++
+				}
 			}
-			if len(names) == 0 {
-				names = []string{"-"}
-			}
-			fmt.Printf("%-9s  %4d  %-6s %.2f   %-12s  %s\n", o, d, dec.Action, dec.P, strings.Join(names, " "), mark)
+			fmt.Printf("%-9s  %4d  %-6s %.2f   %-12s  %s\n", o, d, dec.Action, dec.P, names, mark)
 		}
 		right += caseRight
 		counted += caseCounted
@@ -185,6 +177,14 @@ func runTable(b *Brain) error {
 	fmt.Printf("latency      avg %d ms, p50 %d ms, p95 %d ms over %d calls\n", s.Avg.Milliseconds(), s.P50.Milliseconds(), s.P95.Milliseconds(), s.Calls)
 	fmt.Printf("accuracy     %d/%d (%.1f%%), %d too late rows not counted\n", right, counted, 100*float64(right)/float64(counted), late)
 	return nil
+}
+
+func joinActions(actions []Action) string {
+	names := make([]string, len(actions))
+	for i, a := range actions {
+		names[i] = a.String()
+	}
+	return strings.Join(names, " ")
 }
 
 // ANSI colors for -sim and -table, only when stdout is a terminal and

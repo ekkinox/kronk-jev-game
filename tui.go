@@ -288,17 +288,8 @@ func (g *game) drawClouds(set setFunc, x int) {
 // holes. The dirt is speckled by world cell, so it scrolls with the map.
 func (g *game) drawGround(set setFunc, x0 int) {
 	ground := groundInks[g.world.Difficulty]
-	holes := make([]bool, g.width)
-	for _, o := range g.world.Span(x0, x0+g.width) {
-		if o.Kind != Hole {
-			continue
-		}
-		for x := max(o.Start, x0); x < min(o.End(), x0+g.width); x++ {
-			holes[x-x0] = true
-		}
-	}
 	for col := range g.width {
-		if holes[col] {
+		if g.world.HoleAt(x0 + col) {
 			for h := -1; h >= -1-underRows; h-- {
 				set(col, h, ' ', inkHole)
 			}
@@ -432,14 +423,16 @@ func (g *game) badge(text string, k ink) string {
 }
 
 func (g *game) youHeader() string {
+	var right string
 	switch {
 	case g.paused && g.steps == 0:
-		return spread(g.badge("YOU", inkYou), g.paint(inkYou, "press space to start "), g.width)
+		right = g.paint(inkYou, "press space to start ")
 	case g.paused:
-		return spread(g.badge("YOU", inkYou), g.paint(inkYou, "paused · press space or p to resume "), g.width)
+		right = g.paint(inkYou, "paused · press space or p to resume ")
+	default:
+		right = g.paint(inkDim, fmt.Sprintf("passed %d · failed %d ", sum(g.human.Passed), sum(g.human.Failed)))
 	}
-	right := fmt.Sprintf("passed %d · failed %d ", sum(g.human.Passed), sum(g.human.Failed))
-	return spread(g.badge("YOU", inkYou), g.paint(inkDim, right), g.width)
+	return spread(g.badge("YOU", inkYou), right, g.width)
 }
 
 // modelStats is the right side of the model's header: its last answer, the
@@ -462,17 +455,15 @@ func (g *game) botHeader() string {
 // scoreLine is the middle line: both scores and the speed, the leader
 // highlighted.
 func (g *game) scoreLine() string {
-	you := fmt.Sprintf(" YOU %d ", g.human.Score)
-	bot := fmt.Sprintf(" MODEL %d ", g.bot.Score)
+	youText := fmt.Sprintf("YOU %d", g.human.Score)
+	botText := fmt.Sprintf("MODEL %d", g.bot.Score)
+	you := g.paint(inkYou, " "+youText+" ")
+	bot := g.paint(inkBot, " "+botText+" ")
 	switch {
 	case g.human.Score > g.bot.Score:
-		you = g.paint(ink{fg: "#000000", bg: inkYou.fg, bold: true}, you)
-		bot = g.paint(inkBot, bot)
+		you = g.badge(youText, inkYou)
 	case g.bot.Score > g.human.Score:
-		you = g.paint(inkYou, you)
-		bot = g.paint(ink{fg: "#000000", bg: inkBot.fg, bold: true}, bot)
-	default:
-		you, bot = g.paint(inkYou, you), g.paint(inkBot, bot)
+		bot = g.badge(botText, inkBot)
 	}
 	dash := g.paint(inkDim, "──")
 	level := g.paint(ink{fg: groundInks[g.world.Difficulty].grass.fg, bold: true}, g.world.Difficulty.String())
