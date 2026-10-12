@@ -9,35 +9,7 @@ time, running on your own machine.
 Can a 0.8B model react well enough, and fast enough, to play in real time?
 With Jev, each answer takes about 80 ms, fast enough to time its jumps.
 
-```
- YOU                                                       passed 19 · failed 0
-                       ▄▄▄▄                           ▄▄▄▄▄
-    ▄▄▄▄             ▄██████▄                       ▄███████▄
-  ▄██████▄
-
-        o
-        Y                                    \ /
-                                             <●=
-
-▀▀▀▀▀▀▀    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
- ..   .        .           .                 ..              ..   ..        .  .
-     .                         .   ...  .    .    .     . .   .    .     .  .
-──────────────── YOU 19 ── speed 20 cells/s · easy ── MODEL 18 ─────────────────
- MODEL  Jev-Style-0.8B-Decision-v3-Q8_0       run     74% ·  79 ms · avg  77 ms
-                       ▄▄▄▄                           ▄▄▄▄▄
-    ▄▄▄▄             ▄██████▄                       ▄███████▄
-  ▄██████▄
-
-
-                                             \ /
-                                             <●=
-        -1
-▀▀▀▀▀▀▀ o  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
- ..   . Y      .           .                 ..              ..   ..        .  .
-     .                         .   ...  .    .    .     . .   .    .     .  .
-
-    space/↑ jump · c/↓ crouch · +/- speed · d difficulty · p pause · q quit
-```
+![You on top, the model below, both running the same map](docs/screenshot.png)
 
 It is built with [Kronk](https://github.com/ardanlabs/kronk), which runs models
 locally through llama.cpp, and plays against
