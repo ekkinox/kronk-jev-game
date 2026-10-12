@@ -24,8 +24,8 @@ We built this to see how well local *decision models* perform when run with
 top of llama.cpp.
 
 A decision model doesn't generate text. It picks one option from a list, in a
-single forward pass, so it can answer much faster than a chat model. A game
-is a good test: the model must be right, and it must be right in time.
+single forward pass, so it can answer much faster than a large language
+model. A game is a good test: the model must be right, and it must be right in time.
 
 The default model is
 [Jev-Style-0.8B-Decision-v3](https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decision-v3-GGUF).
