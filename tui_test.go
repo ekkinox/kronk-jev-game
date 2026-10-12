@@ -95,9 +95,12 @@ func TestViewContent(t *testing.T) {
 func TestModelHeader(t *testing.T) {
 	t.Parallel()
 	g := testGame(120, 30)
+	if h := ansi.Strip(g.botHeader()); !strings.Contains(h, "Q8_0 - vulkan") {
+		t.Errorf("header %q does not show the model and its processor", h)
+	}
 	width := func() int {
 		h := ansi.Strip(g.botHeader())
-		return len([]rune(h)) - len([]rune(strings.TrimLeft(h[strings.Index(h, "Q8_0")+4:], " ")))
+		return len([]rune(h)) - len([]rune(strings.TrimLeft(h[strings.Index(h, "vulkan")+len("vulkan"):], " ")))
 	}
 	want := width() // waiting for its first answer
 	g.brain.calls, g.brain.total = 1, 80*time.Millisecond

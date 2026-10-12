@@ -440,11 +440,11 @@ func (g *game) youHeader() string {
 // fixed width, so the header holds still from one answer to the next.
 const modelStats = "%-6s %3.0f%% · %3d ms · avg %3d ms "
 
-// botHeader shows the model, its last decision and what its calls cost. The
-// processor and the call count are in the recap.
+// botHeader shows the model and the processor it runs on, its last decision
+// and what its calls cost. The call count is in the recap.
 func (g *game) botHeader() string {
 	s := g.brain.Stats(false)
-	left := g.badge("MODEL", inkBot) + " " + g.brain.Model
+	left := g.badge("MODEL", inkBot) + " " + g.brain.Model + " - " + g.brain.Processor
 	right := fmt.Sprintf(modelStats, s.Last.Action, 100*s.Last.P, s.Last.Latency.Milliseconds(), s.Avg.Milliseconds())
 	if s.Calls == 0 {
 		right = fmt.Sprintf("%-*s", ansi.StringWidth(right), "waiting for its first answer")
