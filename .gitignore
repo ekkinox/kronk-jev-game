@@ -9,7 +9,7 @@
 *.test
 
 # Compiled binary (built via `make build` / `go build`)
-/game
+/kronk-jev-game
 
 # Code coverage profiles and other test artifacts
 *.out

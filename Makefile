@@ -58,7 +58,7 @@ table: ## Ask the model about each obstacle at each distance, print its accuracy
 
 .PHONY: build
 build: ## Build the binary
-	go build -o game .
+	go build -o kronk-jev-game .
 
 .PHONY: test
 test: ## Run the unit tests (no model needed)

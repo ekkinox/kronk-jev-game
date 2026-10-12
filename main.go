@@ -46,7 +46,7 @@ func run() error {
 	table := flag.Bool("table", false, "ask the model about each obstacle at each distance, then print its accuracy")
 	level := flag.String("difficulty", Easy.String(), "`LEVEL` at the start: easy, medium or hard (d changes it in the game)")
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "usage: game [-speed N] [-seed N] [-difficulty LEVEL]\n       game -sim DURATION [-speed N] [-seed N] [-difficulty LEVEL]\n       game -table\n\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "usage: kronk-jev-game [-speed N] [-seed N] [-difficulty LEVEL]\n       kronk-jev-game -sim DURATION [-speed N] [-seed N] [-difficulty LEVEL]\n       kronk-jev-game -table\n\n")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
