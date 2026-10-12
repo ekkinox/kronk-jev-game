@@ -1,4 +1,4 @@
-# kronk-jev-game
+# Kronk Jev Game
 
 **Race a local AI model in your terminal.**
 
