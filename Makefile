@@ -54,6 +54,33 @@ sim: ## Let the model play alone for SIM (default 60s), then print a recap
 table: ## Ask the model about each obstacle at each distance, print its accuracy
 	@$(RUN_ENV) go run . -table
 
+# ----- Docker ---------------------------------------------------------------
+
+IMAGE ?= kronk-jev-game
+# Docker can't reach Metal, so on a Mac the image runs on the cpu. The image is
+# tagged with its processor: docker-run runs the one built for this machine.
+DOCKER_PROCESSOR ?= $(if $(filter metal,$(PROCESSOR)),cpu,$(PROCESSOR))
+RUNTIME_IMAGE    ?= $(if $(filter cuda,$(DOCKER_PROCESSOR)),nvidia/cuda:13.0.1-runtime-ubuntu24.04,ubuntu:24.04)
+
+# The GPU device nodes belong to the host's video and render groups. Their ids
+# usually differ in the container, so pass them by number.
+VIDEO_GID  := $(shell getent group video 2>/dev/null | cut -d: -f3)
+RENDER_GID := $(shell getent group render 2>/dev/null | cut -d: -f3)
+DRI_FLAGS   = --device /dev/dri $(if $(VIDEO_GID),--group-add $(VIDEO_GID)) $(if $(RENDER_GID),--group-add $(RENDER_GID))
+GPU_FLAGS   = $(if $(filter vulkan,$(DOCKER_PROCESSOR)),$(DRI_FLAGS))$(if $(filter cuda,$(DOCKER_PROCESSOR)),--gpus all)
+
+.PHONY: docker-build
+docker-build: ## Build the Docker image, with llama.cpp and the model in it
+	docker build \
+		--build-arg MODEL='$(MODEL)' \
+		--build-arg PROCESSOR=$(DOCKER_PROCESSOR) \
+		--build-arg RUNTIME_IMAGE=$(RUNTIME_IMAGE) \
+		-t $(IMAGE):$(DOCKER_PROCESSOR) .
+
+.PHONY: docker-run
+docker-run: ## Play against the model in Docker
+	@docker run -it --rm $(GPU_FLAGS) -e TERM -e COLORTERM $(IMAGE):$(DOCKER_PROCESSOR) $(RUN_ARGS)
+
 # ----- Develop --------------------------------------------------------------
 
 .PHONY: build

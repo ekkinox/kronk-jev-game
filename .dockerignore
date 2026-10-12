@@ -1,0 +1,8 @@
+.git
+*_test.go
+docs
+Dockerfile
+.dockerignore
+Makefile
+README.md
+kronk-jev-game

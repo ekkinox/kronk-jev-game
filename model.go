@@ -21,12 +21,8 @@ const defaultModel = "https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decisi
 // recognizes as a decision model.
 var modelSource = cmp.Or(os.Getenv("MODEL"), defaultModel)
 
-// load installs llama.cpp and the model on first use, then loads the model.
-func load() (*Brain, error) {
-	// No deadline: the first run can download a model of several GB.
-	ctx := context.Background()
-	start := time.Now()
-
+// install downloads llama.cpp and the model on first use.
+func install(ctx context.Context) (*libs.Libs, models.Path, error) {
 	// Keep kronk files in their own folder: kronk versions rewrite the catalog
 	// in formats older ones can't read.
 	if os.Getenv("KRONK_BASE_PATH") == "" {
@@ -37,24 +33,37 @@ func load() (*Brain, error) {
 
 	lib, err := libs.New(libs.WithDetect(ctx, downloadLog), libs.WithValidation(true))
 	if err != nil {
-		return nil, err
+		return nil, models.Path{}, err
 	}
 	if _, err := lib.Download(ctx, downloadLog); err != nil {
-		return nil, fmt.Errorf("install llama.cpp: %w", err)
-	}
-	if err := kronk.Init(kronk.WithLibPath(lib.LibsPath())); err != nil {
-		return nil, fmt.Errorf("init kronk: %w", err)
+		return nil, models.Path{}, fmt.Errorf("install llama.cpp: %w", err)
 	}
 
 	mdls, err := models.New()
 	if err != nil {
-		return nil, fmt.Errorf("init models: %w", err)
+		return nil, models.Path{}, fmt.Errorf("init models: %w", err)
 	}
 	// Download only the model file: for some Clef files, kronk would also fetch
 	// a vision projector that decisions never use.
 	mp, err := mdls.DownloadURLs(ctx, downloadLog, []string{modelSource}, "", "")
 	if err != nil {
-		return nil, fmt.Errorf("install model: %w", err)
+		return nil, models.Path{}, fmt.Errorf("install model: %w", err)
+	}
+	return lib, mp, nil
+}
+
+// load installs llama.cpp and the model on first use, then loads the model.
+func load() (*Brain, error) {
+	// No deadline: the first run can download a model of several GB.
+	ctx := context.Background()
+	start := time.Now()
+
+	lib, mp, err := install(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if err := kronk.Init(kronk.WithLibPath(lib.LibsPath())); err != nil {
+		return nil, fmt.Errorf("init kronk: %w", err)
 	}
 
 	// A decision is one short prefill, so a small context window is plenty.

@@ -38,13 +38,14 @@ time its jumps. See [Results](#results) for the numbers.
 
 ## Quick start
 
-You need:
+Run the game with Go or with Docker. Either way, you need `make` and a
+terminal of at least 64 columns by 27 rows.
 
-- Go 1.27 or later
-- `make`
-- A terminal of at least 64 columns by 27 rows
+The game starts paused. Press `space` to go. Press `q` to quit and see a recap.
 
-Then:
+### With Go
+
+You need Go 1.27 or later. Then:
 
 ```shell
 git clone https://github.com/ekkinox/kronk-jev-game.git
@@ -55,10 +56,31 @@ make run
 The first run downloads llama.cpp and the model (about 900 MB) into
 `~/.kronk-game`. Later runs start in a second or so.
 
-The game starts paused. Press `space` to go. Press `q` to quit and see a recap.
-
 It runs on Linux and macOS, on an NVIDIA GPU (CUDA), an AMD or Intel GPU
 (Vulkan), Apple Silicon (Metal), or the CPU. The right one is picked for you.
+
+### With Docker
+
+You need Docker, not Go. Then:
+
+```shell
+git clone https://github.com/ekkinox/kronk-jev-game.git
+cd kronk-jev-game
+make docker-build
+make docker-run
+```
+
+`make docker-build` puts llama.cpp and the model in the image (about 2 GB), so
+the game starts right away. It picks the same GPU as `make run`, and
+`make docker-run` gives the container access to it. `SPEED`, `DIFFICULTY` and
+`SEED` work with `make docker-run`. `MODEL` goes to `make docker-build`.
+
+- **AMD or Intel GPU**: works on Linux, through Vulkan.
+- **NVIDIA GPU**: needs the
+  [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+- **macOS**: Docker can't use Metal, so the model runs on the CPU, at about
+  1 s per answer. That is too slow to play at 20 cells/s: use `make run` to
+  play on the GPU.
 
 ## Controls
 
