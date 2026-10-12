@@ -59,7 +59,7 @@ func load() (*Brain, error) {
 
 	// A decision is one short prefill, so a small context window is plenty.
 	// Pin it: on a GPU, auto-tune otherwise sizes it to the model's maximum and
-	// allocates a KV cache the game never uses. One call is in flight at a time, so
+	// allocates a KV cache we never use. One call is in flight at a time, so
 	// one sequence is enough.
 	krn, err := kronk.New(
 		model.WithModelFiles(mp.ModelFiles),
