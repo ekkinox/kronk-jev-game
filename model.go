@@ -15,10 +15,11 @@ import (
 	"github.com/ardanlabs/kronk/sdk/tools/models"
 )
 
+const defaultModel = "https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decision-v3-GGUF/resolve/main/Jev-Style-0.8B-Decision-v3-Q8_0.gguf"
+
 // modelSource is the URL of a GGUF file on Hugging Face, of a model kronk
 // recognizes as a decision model.
-var modelSource = cmp.Or(os.Getenv("MODEL"),
-	"https://huggingface.co/chaoliangUNSW/Jev-Style-0.8B-Decision-v3-GGUF/resolve/main/Jev-Style-0.8B-Decision-v3-Q8_0.gguf")
+var modelSource = cmp.Or(os.Getenv("MODEL"), defaultModel)
 
 // load installs llama.cpp and the model on first use, then loads the model.
 func load() (*Brain, error) {
